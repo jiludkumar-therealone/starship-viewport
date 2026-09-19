@@ -1,69 +1,87 @@
-# 🚀 Starship Forward Viewport Windows Screensaver
+# 🚀 Starship Forward Viewport Screensaver
 
-A native Windows screensaver (`StarshipStarfield.scr`) modeling the forward viewport of an interstellar starship traversing deep space, with an authentic bottom-right tactical navigation telemetry HUD displaying velocity in **$\text{km/s}$** and interstellar rate in **$\text{ly/h}$**.
+[![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0078D4?logo=windows)](https://github.com/jiludkumar-therealone/starship-viewport)
+[![Language](https://img.shields.io/badge/language-C%23-239120?logo=csharp)](https://github.com/jiludkumar-therealone/starship-viewport)
+[![Framework](https://img.shields.io/badge/dependency-None%20(Native%20Win32)-brightgreen)](https://github.com/jiludkumar-therealone/starship-viewport)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
----
-
-## 🌟 Visual & Tactical Features
-
-* **Forward Viewport 3D Starfield**: Perspective projection simulating forward interstellar travel through deep space.
-* **Spectral Stellar Classification**: Multi-spectral star distribution based on stellar spectral classes:
-  * Class O/B (Deep space ice blue)
-  * Class A (Brilliant pure white)
-  * Class F (Warm ivory)
-  * Class G (Solar gold)
-  * Class K/M (Stellar amber)
-* **Relativistic Warp Streaks**: Dynamic radial motion streaks calculated using relativistic perspective vectors.
-* **Tactical Navigation Telemetry (Bottom-Right HUD)**:
-  * Forward velocity in **$\text{km/s}$** (e.g. `2,997,925,000 km/s`)
-  * Warp rate in **$\text{ly/h}$** (e.g. `1.155 ly/h`)
-  * Status indicator: `SYS: ONLINE | WARP CRUISE ENGAGED`
-  * Micro-sensor jitter simulating authentic live telemetry feed
-  * Color themes: Tactical Cyan, LCARS Amber, Starlight White, Emerald Green, Crimson Alert
-* **Interactive Helm Controls (Settings Dialog)**:
-  * Speed / Warp slider with live telemetry preview
-  * Presets: Sub-light Impulse (0.25c), Light Speed (1.0c), Warp 3, Warp 5, Warp 8, Deep Warp, Slipstream
-  * Star density slider (400 to 4,500 particles)
-  * Motion streak multiplier slider
-  * HUD theme selector & multi-monitor support
-  * One-click "Set Active Screensaver" button
+A native Windows screensaver (`.scr`) that transforms your display into the forward viewing screen of an interstellar starship accelerating through deep space. Features true 3D perspective projection, relativistic warp streaks, and an authentic military-grade navigation telemetry HUD in the lower-right sector displaying velocity in **km/s** and interstellar rate in **lightyears/hour**.
 
 ---
 
-## 🛠️ Installation & Usage
+## 🌌 Viewport Preview
 
-### Method 1: Automated Script (Recommended)
-Double-click `Install-Screensaver.bat` or execute in PowerShell:
+![Starship Forward Viewport Preview](test_viewport_preview.png)
+
+```text
+┌─ NAV TELEMETRY // FWD SENSORS ────────────────┐
+│ VELOCITY    3,037,087,927 km/s                │
+│ RATE        1.156 ly/h                        │
+│ SYS: ONLINE | WARP CRUISE ENGAGED             │
+└───────────────────────────────────────────────┘
+```
+
+---
+
+## ⚡ Key Features
+
+* **3D Perspective Starfield**: Deep space particles radiating forward with realistic depth-attenuated luminance.
+* **Spectral Stellar Classes**: Multi-spectral star generation across stellar classifications (Class O/B ice blue, Class A pure white, Class F warm ivory, Class G solar gold, Class K amber).
+* **Relativistic Warp Streaks**: Motion vectors stretch dynamically outwards based on forward velocity.
+* **Tactical Navigation HUD**:
+  * Real-time velocity readout in **km/s** (e.g. `2,997,925,000 km/s`).
+  * Relativistic transit rate in **ly/h** (e.g. `1.155 ly/h`).
+  * Micro-sensor telemetry jitter simulating active navigation sensors.
+* **Helm Controls (Configuration Modal)**:
+  * Speed slider with synchronized live calculation of km/s and ly/h.
+  * Presets: Sub-light Impulse ($0.25c$), Light Speed ($1.0c$), Warp 3, Warp 5, Warp 8, Deep Warp ($10,000c$), and Slipstream ($50,000c$).
+  * Particle density (400 to 4,500 stars).
+  * 5 HUD Themes: Tactical Cyan, LCARS Amber, Starlight White, Emerald Green, Crimson Alert.
+  * Multi-monitor span support.
+* **Zero Runtime Dependencies**: Compiles to a lightweight ~30 KB binary using built-in Windows Framework components. Runs immediately on any stock Windows 10/11 machine without needing .NET runtimes or external DLLs installed.
+
+---
+
+## 🎛️ Helm Controls Interface
+
+![Screensaver Helm Controls](screensaver_controls_ui.png)
+
+---
+
+## 📥 Installation
+
+### Method 1: 1-Click Install (Pre-compiled Binary)
+1. Download or locate `StarshipStarfield.scr`.
+2. Right-click `StarshipStarfield.scr` and click **Install**.
+3. Windows Screen Saver Settings will open with the screensaver active and previewing in the mini monitor.
+
+### Method 2: Automated PowerShell Script
+Run `Install-Screensaver.ps1` or double-click `Install-Screensaver.bat`:
 ```powershell
 .\Install-Screensaver.ps1
 ```
-This automatically registers `StarshipStarfield.scr` in Windows Screen Saver settings.
+This registers `StarshipStarfield.scr` into your active user profile under `HKCU\Control Panel\Desktop\SCRNSAVE.EXE`.
 
-### Method 2: Native Windows File Explorer
-Right-click `StarshipStarfield.scr`:
-* **Install**: Automatically sets it as your active screensaver and opens the Windows Screen Saver Settings dialog.
-* **Configure**: Opens the Helm Controls / Settings dialog.
-* **Test**: Immediately runs full-screen.
-
-### Method 3: Command Line Switches
+### Command Line Switches
 ```cmd
 StarshipStarfield.scr /s         :: Full-screen screensaver mode
-StarshipStarfield.scr /c         :: Helm Controls / Settings dialog
-StarshipStarfield.scr /p <HWND>  :: Diagnostic preview inside parent window handle
+StarshipStarfield.scr /c         :: Open Helm Controls / Settings dialog
+StarshipStarfield.scr /p <HWND>  :: Render in child preview window
 ```
 
 ---
 
-## 📂 Project Structure
+## 🔨 Building from Source
 
-* `StarshipStarfield.scr` - Compiled native Windows screensaver executable
-* `StarfieldEngine.cs` - 3D relativistic particle engine with spectral shading
-* `TelemetryOverlay.cs` - Tactical bottom-right HUD displaying km/s and ly/h
-* `SettingsForm.cs` - Interactive Windows configuration dialog (`/c`)
-* `ScreenSaverForm.cs` - Borderless full-screen & preview window (`/s`, `/p`)
-* `ConfigManager.cs` - Registry persistence (`HKCU\Software\StarshipStarfieldScreensaver`)
-* `Build.ps1` - Compilation script using native Windows `csc.exe` (no external SDK required)
-* `Install-Screensaver.ps1` - Native OS installation and registration script
-* `Uninstall-Screensaver.ps1` - Clean uninstallation script
-* `Configure-Screensaver.bat` - Instant launcher for Helm Controls
-* `Test-Screensaver.bat` - Instant launcher for full-screen preview
+No Visual Studio or external .NET SDK installation is required—uses the native Windows C# compiler (`csc.exe`):
+
+```powershell
+git clone https://github.com/jiludkumar-therealone/starship-viewport.git
+cd starship-viewport
+.\Build.ps1 -Install
+```
+
+---
+
+## 📜 License
+MIT License. Free for personal and tactical use across all star systems.
