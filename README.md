@@ -26,13 +26,11 @@ A native Windows screensaver (`.scr`) that transforms your display into the forw
 ## ⚡ Key Features
 
 * **3D Perspective Starfield**: Deep space particles radiating forward with realistic depth-attenuated luminance.
-* **Hubble/JWST-Grade Procedural Nebulae (NEW in v1.3)**: Volumetric multi-lobed fractal cosmic clouds with dark absorption dust lanes (Bok globules) and astronomical emission spectrums (Hydrogen-Alpha rose, Oxygen-III cyan, Sulfur-II amber, and deep ultraviolet) with 3D parallax drift.
-* **Relativistic Star Strikes (NEW in v1.3)**: Radial warp streaks emanating outward from the forward flight tunnel apex with dynamic ionizing tails and blazing stellar cores.
-* **Interstellar Cosmic Dust (NEW in v1.3)**: Microscopic cosmic dust motes and micro-debris flying past the viewport with transverse drift.
+* **Relativistic Warp Streaks**: Motion vectors stretch dynamically outwards based on forward velocity and proximity.
 * **Spectral Stellar Classes**: Multi-spectral star generation across stellar classifications (Class O/B ice blue, Class A pure white, Class F warm ivory, Class G solar gold, Class K amber).
 * **Tactical Navigation HUD**:
-  * Real-time velocity readout in **km/s** (e.g. `3,036,931,268 km/s`).
-  * Relativistic transit rate in **ly/h** (e.g. `1.156 ly/h`).
+  * Real-time velocity readout in **km/s** (e.g. `3,036,072,273 km/s`).
+  * Relativistic transit rate in **ly/h** (e.g. `1.155 ly/h`).
   * Micro-sensor telemetry jitter simulating active navigation sensors.
 * **Helm Controls (Configuration Modal)**:
   * Speed slider with synchronized live calculation of km/s and ly/h.
@@ -41,7 +39,7 @@ A native Windows screensaver (`.scr`) that transforms your display into the forw
   * Particle density (400 to 4,500 stars).
   * 5 HUD Themes: Tactical Cyan, LCARS Amber, Starlight White, Emerald Green, Crimson Alert.
   * Multi-monitor span support.
-* **Zero Runtime Dependencies**: Compiles to a lightweight ~35 KB binary using built-in Windows Framework components. Runs immediately on any stock Windows 10/11 machine without needing .NET runtimes or external DLLs installed.
+* **Zero Runtime Dependencies**: Compiles to a lightweight ~30 KB binary using built-in Windows Framework components. Runs immediately on any stock Windows 10/11 machine without needing .NET runtimes or external DLLs installed.
 
 ---
 

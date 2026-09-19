@@ -100,15 +100,13 @@ namespace StarshipStarfield
 
         private void InitEngineAndTelemetry()
         {
-            // Map WarpFactor (0.1 to 10.0) to starfield speed (3.5 to 85.0) for high-velocity warp travel
-            float visualSpeed = Math.Max(3.5f, config.WarpFactor * 8.5f);
+            // Map WarpFactor (0.1 to 10.0) to starfield speed (2.0 to 45.0)
+            float visualSpeed = Math.Max(2.0f, config.WarpFactor * 4.5f);
             engine = new StarfieldEngine(
                 config.StarCount,
                 visualSpeed,
                 config.StreakLength,
-                config.SpectralVariance,
-                config.EnableNebula,
-                config.EnableCosmicDust
+                config.SpectralVariance
             );
             engine.Resize(this.ClientSize.Width, this.ClientSize.Height);
 
@@ -149,11 +147,8 @@ namespace StarshipStarfield
 
             Graphics g = e.Graphics;
 
-            // Clear to deep cosmos only if engine does not have an opaque backdrop covering the frame
-            if (engine == null || !engine.HasBackdrop)
-            {
-                g.Clear(Color.Black);
-            }
+            // Clear to deep cosmos
+            g.Clear(Color.Black);
 
             // Update & render starfield
             if (engine != null)

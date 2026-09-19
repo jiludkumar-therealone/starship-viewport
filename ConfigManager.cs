@@ -17,8 +17,6 @@ namespace StarshipStarfield
         public bool ShowTelemetryFrame { get; set; }  // Border / tactical frame around HUD
         public bool EnableSensorJitter { get; set; }  // Subtle micro-fluctuations in readout
         public bool SpectralVariance { get; set; }    // Realistic star spectral colors vs monochrome
-        public bool EnableNebula { get; set; }        // Procedural 3D cosmic gas clouds
-        public bool EnableCosmicDust { get; set; }    // Interstellar dust motes / micro-debris
         public double CustomKmPerSec { get; set; }    // Speed in km/s
         public double CustomLyPerHour { get; set; }   // Speed in ly/h
         public bool UseCustomSpeed { get; set; }      // Manual override toggle
@@ -35,8 +33,6 @@ namespace StarshipStarfield
             ShowTelemetryFrame = true;
             EnableSensorJitter = true;
             SpectralVariance = true;
-            EnableNebula = true;
-            EnableCosmicDust = true;
             UseCustomSpeed = false;
             CustomKmPerSec = 2997924580.0; // ~10,000 c
             CustomLyPerHour = 1.1408;
@@ -96,12 +92,6 @@ namespace StarshipStarfield
                     val = key.GetValue("SpectralVariance");
                     if (val != null) SpectralVariance = Convert.ToBoolean(val);
 
-                    val = key.GetValue("EnableNebula");
-                    if (val != null) EnableNebula = Convert.ToBoolean(val);
-
-                    val = key.GetValue("EnableCosmicDust");
-                    if (val != null) EnableCosmicDust = Convert.ToBoolean(val);
-
                     val = key.GetValue("UseCustomSpeed");
                     if (val != null) UseCustomSpeed = Convert.ToBoolean(val);
 
@@ -135,8 +125,6 @@ namespace StarshipStarfield
                     key.SetValue("ShowTelemetryFrame", ShowTelemetryFrame);
                     key.SetValue("EnableSensorJitter", EnableSensorJitter);
                     key.SetValue("SpectralVariance", SpectralVariance);
-                    key.SetValue("EnableNebula", EnableNebula);
-                    key.SetValue("EnableCosmicDust", EnableCosmicDust);
                     key.SetValue("UseCustomSpeed", UseCustomSpeed);
                     key.SetValue("CustomKmPerSec", CustomKmPerSec);
                     key.SetValue("CustomLyPerHour", CustomLyPerHour);

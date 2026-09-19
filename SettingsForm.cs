@@ -25,8 +25,6 @@ namespace StarshipStarfield
 
         private ComboBox cmbTheme;
         private CheckBox chkSpectral;
-        private CheckBox chkNebula;
-        private CheckBox chkCosmicDust;
         private CheckBox chkTelemetryFrame;
         private CheckBox chkJitter;
         private CheckBox chkMultiMonitor;
@@ -224,7 +222,7 @@ namespace StarshipStarfield
             top += 135;
 
             // Group: HUD & Visual Styling
-            GroupBox grpHud = CreateGroupBox("HUD THEME // SYSTEM & COSMIC OPTIONS", left, top, rightWidth, 195);
+            GroupBox grpHud = CreateGroupBox("HUD THEME // SYSTEM OPTIONS", left, top, rightWidth, 150);
             this.Controls.Add(grpHud);
 
             Label lblTheme = new Label { Text = "Telemetry Color Theme:", Location = new Point(16, 26), Size = new Size(150, 22) };
@@ -244,34 +242,16 @@ namespace StarshipStarfield
             chkSpectral = new CheckBox
             {
                 Text = "Multi-spectral stellar classes (Blue-white, Solar gold, Warm amber)",
-                Location = new Point(16, 54),
+                Location = new Point(16, 56),
                 Size = new Size(440, 22),
                 ForeColor = Color.FromArgb(210, 225, 240)
             };
             grpHud.Controls.Add(chkSpectral);
 
-            chkNebula = new CheckBox
-            {
-                Text = "Procedural 3D Nebula Gas Clouds (Atmospheric cosmic clouds)",
-                Location = new Point(16, 78),
-                Size = new Size(440, 22),
-                ForeColor = Color.FromArgb(210, 225, 240)
-            };
-            grpHud.Controls.Add(chkNebula);
-
-            chkCosmicDust = new CheckBox
-            {
-                Text = "Interstellar Cosmic Dust Particles (Micro-debris motion streams)",
-                Location = new Point(16, 102),
-                Size = new Size(440, 22),
-                ForeColor = Color.FromArgb(210, 225, 240)
-            };
-            grpHud.Controls.Add(chkCosmicDust);
-
             chkTelemetryFrame = new CheckBox
             {
                 Text = "Display tactical HUD frame and corner brackets",
-                Location = new Point(16, 126),
+                Location = new Point(16, 80),
                 Size = new Size(320, 22),
                 ForeColor = Color.FromArgb(210, 225, 240)
             };
@@ -280,7 +260,7 @@ namespace StarshipStarfield
             chkJitter = new CheckBox
             {
                 Text = "Live telemetry sensor micro-jitter",
-                Location = new Point(16, 150),
+                Location = new Point(16, 104),
                 Size = new Size(240, 22),
                 ForeColor = Color.FromArgb(210, 225, 240)
             };
@@ -289,13 +269,13 @@ namespace StarshipStarfield
             chkMultiMonitor = new CheckBox
             {
                 Text = "Engage across all monitors",
-                Location = new Point(275, 150),
+                Location = new Point(275, 104),
                 Size = new Size(180, 22),
                 ForeColor = Color.FromArgb(210, 225, 240)
             };
             grpHud.Controls.Add(chkMultiMonitor);
 
-            top += 205;
+            top += 160;
 
             // Action Buttons
             btnTest = new Button
@@ -387,8 +367,6 @@ namespace StarshipStarfield
                 cmbTheme.SelectedIndex = 0;
 
             chkSpectral.Checked = config.SpectralVariance;
-            chkNebula.Checked = config.EnableNebula;
-            chkCosmicDust.Checked = config.EnableCosmicDust;
             chkTelemetryFrame.Checked = config.ShowTelemetryFrame;
             chkJitter.Checked = config.EnableSensorJitter;
             chkMultiMonitor.Checked = config.MultiMonitor;
@@ -509,8 +487,6 @@ namespace StarshipStarfield
             cfg.StreakLength = tbStreak.Value / 10.0f;
             cfg.ColorTheme = cmbTheme.SelectedItem != null ? cmbTheme.SelectedItem.ToString() : "Cyan";
             cfg.SpectralVariance = chkSpectral.Checked;
-            cfg.EnableNebula = chkNebula.Checked;
-            cfg.EnableCosmicDust = chkCosmicDust.Checked;
             cfg.ShowTelemetryFrame = chkTelemetryFrame.Checked;
             cfg.EnableSensorJitter = chkJitter.Checked;
             cfg.MultiMonitor = chkMultiMonitor.Checked;
@@ -525,8 +501,6 @@ namespace StarshipStarfield
             config.StreakLength = tbStreak.Value / 10.0f;
             config.ColorTheme = cmbTheme.SelectedItem != null ? cmbTheme.SelectedItem.ToString() : "Cyan";
             config.SpectralVariance = chkSpectral.Checked;
-            config.EnableNebula = chkNebula.Checked;
-            config.EnableCosmicDust = chkCosmicDust.Checked;
             config.ShowTelemetryFrame = chkTelemetryFrame.Checked;
             config.EnableSensorJitter = chkJitter.Checked;
             config.MultiMonitor = chkMultiMonitor.Checked;
@@ -546,8 +520,6 @@ namespace StarshipStarfield
                 config.StreakLength = tbStreak.Value / 10.0f;
                 config.ColorTheme = cmbTheme.SelectedItem != null ? cmbTheme.SelectedItem.ToString() : "Cyan";
                 config.SpectralVariance = chkSpectral.Checked;
-                config.EnableNebula = chkNebula.Checked;
-                config.EnableCosmicDust = chkCosmicDust.Checked;
                 config.ShowTelemetryFrame = chkTelemetryFrame.Checked;
                 config.EnableSensorJitter = chkJitter.Checked;
                 config.MultiMonitor = chkMultiMonitor.Checked;

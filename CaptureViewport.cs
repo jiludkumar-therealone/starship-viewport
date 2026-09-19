@@ -13,20 +13,15 @@ namespace StarshipStarfield
 
             ConfigManager cfg = new ConfigManager();
             cfg.Load();
-            // Hero screenshot settings: Deep Warp Cruise for dramatic warp strikes & nebulae
             cfg.WarpFactor = 5.0f;
-            cfg.StreakLength = 1.4f;
-            cfg.EnableNebula = true;
-            cfg.EnableCosmicDust = true;
+            cfg.StreakLength = 1.3f;
             cfg.SpectralVariance = true;
 
             StarfieldEngine engine = new StarfieldEngine(
                 cfg.StarCount,
-                cfg.WarpFactor * 8.5f,
+                cfg.WarpFactor * 4.5f,
                 cfg.StreakLength,
-                cfg.SpectralVariance,
-                cfg.EnableNebula,
-                cfg.EnableCosmicDust
+                cfg.SpectralVariance
             );
             engine.Resize(width, height);
 
@@ -43,16 +38,8 @@ namespace StarshipStarfield
             using (Bitmap bmp = new Bitmap(width, height, PixelFormat.Format32bppArgb))
             using (Graphics g = Graphics.FromImage(bmp))
             {
-                System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
-                int benchFrames = 20;
-                for (int f = 0; f < benchFrames; f++)
-                {
-                    if (!engine.HasBackdrop) g.Clear(Color.Black);
-                    engine.Render(g);
-                }
-                sw.Stop();
-                Console.WriteLine("Average Render Frame Time: " + (sw.ElapsedMilliseconds / (double)benchFrames) + " ms (" + (1000.0 / (sw.ElapsedMilliseconds / (double)benchFrames)) + " FPS)");
-
+                g.Clear(Color.Black);
+                engine.Render(g);
                 telemetry.Render(g, width, height);
                 bmp.Save("test_viewport_preview.png", ImageFormat.Png);
             }
