@@ -71,6 +71,12 @@ namespace StarshipStarfield
         public bool SpectralColors { get; set; }
         public bool EnableNebula { get; set; }
         public bool EnableCosmicDust { get; set; }
+        public bool HasBackdrop { get { return EnableNebula && cosmicDustBackdrop != null; } }
+
+        // Cached GDI rendering resources for zero-allocation 60 FPS performance
+        private Pen reusablePen = new Pen(Color.White, 1.0f);
+        private SolidBrush reusableBrush = new SolidBrush(Color.White);
+        private SolidBrush reusableCoreBrush = new SolidBrush(Color.White);
 
         private static readonly Color[] SpectralPalette = new Color[]
         {
@@ -131,8 +137,8 @@ namespace StarshipStarfield
             this.EnableCosmicDust = enableDust;
 
             InitStars(count);
-            InitNebulae(14);
-            InitCosmicDust(350);
+            InitNebulae(4);
+            InitCosmicDust(250);
         }
 
         public void Resize(int w, int h)
@@ -156,13 +162,13 @@ namespace StarshipStarfield
 
             if (!EnableNebula || width <= 0 || height <= 0) return;
 
-            // Generate multi-layer procedural fractal cosmic gas backdrop
-            int texW = 1024;
-            int texH = 768;
-            cosmicDustBackdrop = new Bitmap(texW, texH, PixelFormat.Format32bppArgb);
+            // Generate full-resolution opaque 32bpp cosmic gas backdrop for direct unscaled hardware blitting
+            int texW = width;
+            int texH = height;
+            cosmicDustBackdrop = new Bitmap(texW, texH, PixelFormat.Format32bppRgb);
 
-            // Generate 3 octaves of smooth Perlin-like value noise
-            int gridStep = 64;
+            // Generate 3 octaves of smooth Perlin-like value noise with wide celestial grid
+            int gridStep = 240;
             int gw = (texW / gridStep) + 3;
             int gh = (texH / gridStep) + 3;
             float[,] nGrid1 = new float[gw, gh];
@@ -179,7 +185,7 @@ namespace StarshipStarfield
             BitmapData data = cosmicDustBackdrop.LockBits(
                 new Rectangle(0, 0, texW, texH),
                 ImageLockMode.WriteOnly,
-                PixelFormat.Format32bppArgb);
+                PixelFormat.Format32bppRgb);
 
             unsafe
             {
@@ -225,27 +231,43 @@ namespace StarshipStarfield
                         float n2 = top2 * (1.0f - sy2) + bot2 * sy2;
 
                         // Combined turbulent noise with dark dust absorption rifts
-                        float gasDensity = (n1 * 0.7f + n2 * 0.3f);
-                        gasDensity = (float)Math.Pow(gasDensity, 1.8); // High contrast wisps
+                        float gasDensity = (n1 * 0.72f + n2 * 0.28f);
+                        gasDensity = (float)Math.Pow(gasDensity, 1.75); // High contrast wisps
 
                         // Dark dust lane filter (Bok globules)
-                        float dustRift = (float)Math.Sin(x * 0.008f + y * 0.006f + n1 * 3.5f);
-                        if (dustRift > 0.4f)
+                        float dustRift = (float)Math.Sin(x * 0.0035f + y * 0.0028f + n1 * 2.8f);
+                        if (dustRift > 0.42f)
                         {
-                            gasDensity *= Math.Max(0.2f, 1.0f - (dustRift - 0.4f) * 1.5f);
+                            gasDensity *= Math.Max(0.12f, 1.0f - (dustRift - 0.42f) * 2.2f);
                         }
 
-                        // Colors: Deep space cosmic gas curtain (deep violet to hydrogen-alpha rose & teal)
-                        int alpha = (int)(gasDensity * 80.0f); // Rich, ethereal deep background opacity
-                        int r = (int)(gasDensity * 140.0f);
-                        int g = (int)(gasDensity * 65.0f);
-                        int b = (int)(gasDensity * 205.0f);
+                        // Astronomical multi-spectral emission bands:
+                        // Continuous smooth blend between [O III] cyan (500nm), H-alpha rose (656nm), and [S II] amber (672nm)
+                        float specMix = (float)Math.Sin(x * 0.0016f + y * 0.0012f + n1 * 1.8f);
+                        float t = (specMix + 1.0f) * 0.5f; // 0.0 to 1.0
+                        t = Math.Max(0f, Math.Min(1f, t));
+
+                        float rVal, gVal, bVal;
+                        if (t < 0.5f)
+                        {
+                            float u = t * 2.0f;
+                            rVal = gasDensity * (20.0f * (1.0f - u) + 145.0f * u);
+                            gVal = gasDensity * (135.0f * (1.0f - u) + 35.0f * u);
+                            bVal = gasDensity * (185.0f * (1.0f - u) + 135.0f * u);
+                        }
+                        else
+                        {
+                            float u = (t - 0.5f) * 2.0f;
+                            rVal = gasDensity * (145.0f * (1.0f - u) + 185.0f * u);
+                            gVal = gasDensity * (35.0f * (1.0f - u) + 110.0f * u);
+                            bVal = gasDensity * (135.0f * (1.0f - u) + 30.0f * u);
+                        }
 
                         int idx = x * 4;
-                        row[idx + 0] = (byte)Math.Min(255, b);
-                        row[idx + 1] = (byte)Math.Min(255, g);
-                        row[idx + 2] = (byte)Math.Min(255, r);
-                        row[idx + 3] = (byte)Math.Min(255, alpha);
+                        row[idx + 0] = (byte)Math.Min(255, (int)bVal);
+                        row[idx + 1] = (byte)Math.Min(255, (int)gVal);
+                        row[idx + 2] = (byte)Math.Min(255, (int)rVal);
+                        row[idx + 3] = 255;
                     }
                 }
             }
@@ -325,25 +347,33 @@ namespace StarshipStarfield
             // Select an astronomical emission theme
             Color[] theme = NebulaThemes[rand.Next(NebulaThemes.Length)];
 
-            // Generate 6 to 9 interconnected organic fractal lobes per cluster
-            int numLobes = rand.Next(6, 10);
+            // Generate 2 expansive, complementary organic lobes per cluster
+            int numLobes = 2;
             cluster.Lobes = new NebulaLobe[numLobes];
 
-            for (int j = 0; j < numLobes; j++)
+            // Core emission cloud
+            cluster.Lobes[0] = new NebulaLobe
             {
-                float angle = (float)(rand.NextDouble() * Math.PI * 2.0);
-                float dist = (float)(rand.NextDouble() * cluster.BaseScale * 0.65f);
+                OffsetX = 0f,
+                OffsetY = 0f,
+                OffsetZ = 0f,
+                Radius = cluster.BaseScale * 0.95f,
+                Color = theme[0],
+                Alpha = (float)(rand.NextDouble() * 30.0 + 45.0)
+            };
 
-                cluster.Lobes[j] = new NebulaLobe
-                {
-                    OffsetX = (float)Math.Cos(angle) * dist,
-                    OffsetY = (float)Math.Sin(angle) * dist,
-                    OffsetZ = (float)((rand.NextDouble() - 0.5) * 120.0),
-                    Radius = (float)(rand.NextDouble() * cluster.BaseScale * 0.75f + cluster.BaseScale * 0.35f),
-                    Color = theme[rand.Next(theme.Length)],
-                    Alpha = (float)(rand.NextDouble() * 38.0 + 36.0) // 36 to 74 alpha per overlapping lobe
-                };
-            }
+            // Secondary ionization plume / halo
+            float angle = (float)(rand.NextDouble() * Math.PI * 2.0);
+            float dist = cluster.BaseScale * 0.45f;
+            cluster.Lobes[1] = new NebulaLobe
+            {
+                OffsetX = (float)Math.Cos(angle) * dist,
+                OffsetY = (float)Math.Sin(angle) * dist,
+                OffsetZ = (float)((rand.NextDouble() - 0.5) * 60.0),
+                Radius = cluster.BaseScale * 0.75f,
+                Color = theme[theme.Length > 1 ? 1 : 0],
+                Alpha = (float)(rand.NextDouble() * 25.0 + 35.0)
+            };
 
             return cluster;
         }
@@ -458,16 +488,8 @@ namespace StarshipStarfield
 
         private void RenderCosmicBackdrop(Graphics g)
         {
-            // Draw expansive procedural nebula gas curtain across the deep field
-            int srcW = cosmicDustBackdrop.Width;
-            int srcH = cosmicDustBackdrop.Height;
-
-            int ox = (int)backdropOffsetX % srcW;
-            int oy = (int)backdropOffsetY % srcH;
-
-            // Scale to fill viewport
-            Rectangle destRect = new Rectangle(0, 0, width, height);
-            g.DrawImage(cosmicDustBackdrop, destRect, 0, 0, srcW, srcH, GraphicsUnit.Pixel);
+            // Direct 1:1 hardware blit of procedural nebula gas curtain across the deep field
+            g.DrawImageUnscaled(cosmicDustBackdrop, 0, 0);
         }
 
         private void RenderNebulae(Graphics g)
@@ -551,13 +573,10 @@ namespace StarshipStarfield
                 if (alpha < 6) continue;
 
                 Color col = dustMotes[i].Tint;
-                Color dustColor = Color.FromArgb(alpha, col.R, col.G, col.B);
+                reusableBrush.Color = Color.FromArgb(alpha, col.R, col.G, col.B);
 
                 float r = dustMotes[i].Size * (0.4f + depthNorm * 0.9f);
-                using (SolidBrush dBrush = new SolidBrush(dustColor))
-                {
-                    g.FillEllipse(dBrush, sx - r, sy - r, r * 2.0f, r * 2.0f);
-                }
+                g.FillEllipse(reusableBrush, sx - r, sy - r, r * 2.0f, r * 2.0f);
             }
         }
 
@@ -618,32 +637,28 @@ namespace StarshipStarfield
                     float strokeWidth = Math.Max(1.0f, (stars[i].Size * 0.9f) + (depthNorm * 2.6f));
 
                     // Luminous ionization streak
-                    using (Pen pen = new Pen(renderColor, strokeWidth))
-                    {
-                        pen.StartCap = LineCap.Round;
-                        pen.EndCap = LineCap.Round;
-                        g.DrawLine(pen, tailX, tailY, sx, sy);
-                    }
+                    reusablePen.Color = renderColor;
+                    reusablePen.Width = strokeWidth;
+                    LineCap cap = strokeWidth > 2.2f ? LineCap.Round : LineCap.Flat;
+                    reusablePen.StartCap = cap;
+                    reusablePen.EndCap = cap;
+                    g.DrawLine(reusablePen, tailX, tailY, sx, sy);
 
                     // Bright core head highlight
                     if (depthNorm > 0.45f)
                     {
                         int coreAlpha = Math.Min(255, (int)(alpha * 1.15f));
-                        using (SolidBrush coreBrush = new SolidBrush(Color.FromArgb(coreAlpha, 255, 255, 255)))
-                        {
-                            float headR = strokeWidth * 0.9f;
-                            g.FillEllipse(coreBrush, sx - headR, sy - headR, headR * 2.0f, headR * 2.0f);
-                        }
+                        reusableCoreBrush.Color = Color.FromArgb(coreAlpha, 255, 255, 255);
+                        float headR = strokeWidth * 0.9f;
+                        g.FillEllipse(reusableCoreBrush, sx - headR, sy - headR, headR * 2.0f, headR * 2.0f);
                     }
                 }
                 else
                 {
                     // Distant pinpoint star
                     float starRadius = Math.Max(0.8f, depthNorm * stars[i].Size * 1.8f);
-                    using (SolidBrush brush = new SolidBrush(renderColor))
-                    {
-                        g.FillEllipse(brush, sx - starRadius, sy - starRadius, starRadius * 2.0f, starRadius * 2.0f);
-                    }
+                    reusableBrush.Color = renderColor;
+                    g.FillEllipse(reusableBrush, sx - starRadius, sy - starRadius, starRadius * 2.0f, starRadius * 2.0f);
                 }
             }
         }
@@ -654,6 +669,21 @@ namespace StarshipStarfield
             {
                 cosmicDustBackdrop.Dispose();
                 cosmicDustBackdrop = null;
+            }
+            if (reusablePen != null)
+            {
+                reusablePen.Dispose();
+                reusablePen = null;
+            }
+            if (reusableBrush != null)
+            {
+                reusableBrush.Dispose();
+                reusableBrush = null;
+            }
+            if (reusableCoreBrush != null)
+            {
+                reusableCoreBrush.Dispose();
+                reusableCoreBrush = null;
             }
         }
     }
