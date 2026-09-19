@@ -14,7 +14,14 @@ namespace StarshipStarfield
             ConfigManager cfg = new ConfigManager();
             cfg.Load();
 
-            StarfieldEngine engine = new StarfieldEngine(cfg.StarCount, cfg.WarpFactor * 4.5f, cfg.StreakLength, cfg.SpectralVariance);
+            StarfieldEngine engine = new StarfieldEngine(
+                cfg.StarCount,
+                cfg.WarpFactor * 4.5f,
+                cfg.StreakLength,
+                cfg.SpectralVariance,
+                cfg.EnableNebula,
+                cfg.EnableCosmicDust
+            );
             engine.Resize(width, height);
 
             TelemetryOverlay telemetry = new TelemetryOverlay(cfg);

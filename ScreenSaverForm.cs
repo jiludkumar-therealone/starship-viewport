@@ -106,7 +106,9 @@ namespace StarshipStarfield
                 config.StarCount,
                 visualSpeed,
                 config.StreakLength,
-                config.SpectralVariance
+                config.SpectralVariance,
+                config.EnableNebula,
+                config.EnableCosmicDust
             );
             engine.Resize(this.ClientSize.Width, this.ClientSize.Height);
 

@@ -21,7 +21,18 @@ if (-not (Test-Path $TargetDir)) {
 }
 
 $DestScr = Join-Path $TargetDir "StarshipStarfield.scr"
-Copy-Item -Path $SourceScr -Destination $DestScr -Force
+try {
+    Copy-Item -Path $SourceScr -Destination $DestScr -Force
+} catch {
+    try {
+        $oldScr = Join-Path $TargetDir "StarshipStarfield.scr.old"
+        if (Test-Path $oldScr) { Remove-Item $oldScr -Force -ErrorAction SilentlyContinue }
+        Rename-Item -Path $DestScr -NewName "StarshipStarfield.scr.old" -Force -ErrorAction SilentlyContinue
+        Copy-Item -Path $SourceScr -Destination $DestScr -Force
+    } catch {
+        Write-Host "[!] Destination is locked by an active process. Changes applied to project directory." -ForegroundColor Yellow
+    }
+}
 
 Write-Host "[+] Binary installed to: $DestScr" -ForegroundColor Green
 

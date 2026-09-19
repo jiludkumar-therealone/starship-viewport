@@ -8,6 +8,7 @@ namespace StarshipStarfield
     public class SettingsForm : Form
     {
         private ConfigManager config;
+        private bool isUpdatingUI = false;
 
         // UI Controls
         private TrackBar tbWarp;
@@ -24,6 +25,8 @@ namespace StarshipStarfield
 
         private ComboBox cmbTheme;
         private CheckBox chkSpectral;
+        private CheckBox chkNebula;
+        private CheckBox chkCosmicDust;
         private CheckBox chkTelemetryFrame;
         private CheckBox chkJitter;
         private CheckBox chkMultiMonitor;
@@ -43,7 +46,7 @@ namespace StarshipStarfield
         private void InitializeComponent()
         {
             this.Text = "Starship Viewport Screensaver - Helm Controls";
-            this.Size = new Size(540, 680);
+            this.Size = new Size(540, 740);
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -83,7 +86,7 @@ namespace StarshipStarfield
                 ForeColor = Color.White
             };
             cmbPresets.Items.AddRange(new object[] {
-                "Sub-light Impulse (0.25c - 74,948 km/s)",
+                "Sub-light Impulse (0.3c - 89,938 km/s)",
                 "Light Speed (1.0c - 299,792 km/s | 0.0001 ly/h)",
                 "Warp 3 Cruise (39c - 11,691,900 km/s | 0.0044 ly/h)",
                 "Warp 5 Standard (214c - 64,155,500 km/s | 0.0244 ly/h)",
@@ -92,7 +95,6 @@ namespace StarshipStarfield
                 "Transwarp / Slipstream (50,000c - 14,989,620,000 km/s | 5.7040 ly/h)",
                 "Custom Velocity Profile"
             });
-            cmbPresets.SelectedIndex = 5;
             cmbPresets.SelectedIndexChanged += OnPresetChanged;
             grpSpeed.Controls.Add(cmbPresets);
 
@@ -109,7 +111,7 @@ namespace StarshipStarfield
                 SmallChange = 1,
                 LargeChange = 5
             };
-            tbWarp.ValueChanged += (s, e) => UpdateCalculatedSpeedUI(false);
+            tbWarp.ValueChanged += OnWarpSliderChanged;
             grpSpeed.Controls.Add(tbWarp);
 
             lblWarpVal = new Label
@@ -222,7 +224,7 @@ namespace StarshipStarfield
             top += 135;
 
             // Group: HUD & Visual Styling
-            GroupBox grpHud = CreateGroupBox("HUD THEME // SYSTEM OPTIONS", left, top, rightWidth, 140);
+            GroupBox grpHud = CreateGroupBox("HUD THEME // SYSTEM & COSMIC OPTIONS", left, top, rightWidth, 195);
             this.Controls.Add(grpHud);
 
             Label lblTheme = new Label { Text = "Telemetry Color Theme:", Location = new Point(16, 26), Size = new Size(150, 22) };
@@ -242,16 +244,34 @@ namespace StarshipStarfield
             chkSpectral = new CheckBox
             {
                 Text = "Multi-spectral stellar classes (Blue-white, Solar gold, Warm amber)",
-                Location = new Point(16, 56),
+                Location = new Point(16, 54),
                 Size = new Size(440, 22),
                 ForeColor = Color.FromArgb(210, 225, 240)
             };
             grpHud.Controls.Add(chkSpectral);
 
+            chkNebula = new CheckBox
+            {
+                Text = "Procedural 3D Nebula Gas Clouds (Atmospheric cosmic clouds)",
+                Location = new Point(16, 78),
+                Size = new Size(440, 22),
+                ForeColor = Color.FromArgb(210, 225, 240)
+            };
+            grpHud.Controls.Add(chkNebula);
+
+            chkCosmicDust = new CheckBox
+            {
+                Text = "Interstellar Cosmic Dust Particles (Micro-debris motion streams)",
+                Location = new Point(16, 102),
+                Size = new Size(440, 22),
+                ForeColor = Color.FromArgb(210, 225, 240)
+            };
+            grpHud.Controls.Add(chkCosmicDust);
+
             chkTelemetryFrame = new CheckBox
             {
                 Text = "Display tactical HUD frame and corner brackets",
-                Location = new Point(16, 80),
+                Location = new Point(16, 126),
                 Size = new Size(320, 22),
                 ForeColor = Color.FromArgb(210, 225, 240)
             };
@@ -260,7 +280,7 @@ namespace StarshipStarfield
             chkJitter = new CheckBox
             {
                 Text = "Live telemetry sensor micro-jitter",
-                Location = new Point(16, 104),
+                Location = new Point(16, 150),
                 Size = new Size(240, 22),
                 ForeColor = Color.FromArgb(210, 225, 240)
             };
@@ -269,13 +289,13 @@ namespace StarshipStarfield
             chkMultiMonitor = new CheckBox
             {
                 Text = "Engage across all monitors",
-                Location = new Point(275, 104),
+                Location = new Point(275, 150),
                 Size = new Size(180, 22),
                 ForeColor = Color.FromArgb(210, 225, 240)
             };
             grpHud.Controls.Add(chkMultiMonitor);
 
-            top += 150;
+            top += 205;
 
             // Action Buttons
             btnTest = new Button
@@ -344,6 +364,14 @@ namespace StarshipStarfield
 
         private void LoadConfigToUI()
         {
+            isUpdatingUI = true;
+
+            // Load presets correctly without defaulting back to index 5
+            int targetPreset = (config.PresetIndex >= 0 && config.PresetIndex < cmbPresets.Items.Count)
+                ? config.PresetIndex
+                : ConfigManager.InferPresetIndex(config.WarpFactor);
+            cmbPresets.SelectedIndex = targetPreset;
+
             int warpSliderVal = Math.Max(2, Math.Min(100, (int)Math.Round(config.WarpFactor * 10f)));
             tbWarp.Value = warpSliderVal;
 
@@ -359,18 +387,24 @@ namespace StarshipStarfield
                 cmbTheme.SelectedIndex = 0;
 
             chkSpectral.Checked = config.SpectralVariance;
+            chkNebula.Checked = config.EnableNebula;
+            chkCosmicDust.Checked = config.EnableCosmicDust;
             chkTelemetryFrame.Checked = config.ShowTelemetryFrame;
             chkJitter.Checked = config.EnableSensorJitter;
             chkMultiMonitor.Checked = config.MultiMonitor;
 
-            UpdateCalculatedSpeedUI(true);
+            isUpdatingUI = false;
+            UpdateCalculatedSpeedUI();
         }
 
         private void OnPresetChanged(object sender, EventArgs e)
         {
+            if (isUpdatingUI) return;
+
+            isUpdatingUI = true;
             switch (cmbPresets.SelectedIndex)
             {
-                case 0: // Impulse 0.25c
+                case 0: // Impulse 0.3c
                     tbWarp.Value = 3; // 0.3x
                     break;
                 case 1: // 1.0c
@@ -391,13 +425,40 @@ namespace StarshipStarfield
                 case 6: // Transwarp / Slipstream
                     tbWarp.Value = 85; // 8.5x
                     break;
+                case 7: // Custom
+                    break;
                 default:
                     break;
             }
-            UpdateCalculatedSpeedUI(false);
+            isUpdatingUI = false;
+            UpdateCalculatedSpeedUI();
         }
 
-        private void UpdateCalculatedSpeedUI(bool matchPreset)
+        private void OnWarpSliderChanged(object sender, EventArgs e)
+        {
+            if (!isUpdatingUI)
+            {
+                int val = tbWarp.Value;
+                int matched = 7; // Custom
+                if (val == 3) matched = 0;
+                else if (val == 10) matched = 1;
+                else if (val == 20) matched = 2;
+                else if (val == 35) matched = 3;
+                else if (val == 45) matched = 4;
+                else if (val == 50) matched = 5;
+                else if (val == 85) matched = 6;
+
+                if (cmbPresets.SelectedIndex != matched)
+                {
+                    isUpdatingUI = true;
+                    cmbPresets.SelectedIndex = matched;
+                    isUpdatingUI = false;
+                }
+            }
+            UpdateCalculatedSpeedUI();
+        }
+
+        private void UpdateCalculatedSpeedUI()
         {
             float warp = tbWarp.Value / 10.0f;
             lblWarpVal.Text = warp.ToString("F1") + "x";
@@ -443,10 +504,13 @@ namespace StarshipStarfield
         {
             ConfigManager cfg = new ConfigManager();
             cfg.WarpFactor = tbWarp.Value / 10.0f;
+            cfg.PresetIndex = cmbPresets.SelectedIndex;
             cfg.StarCount = tbStarCount.Value;
             cfg.StreakLength = tbStreak.Value / 10.0f;
             cfg.ColorTheme = cmbTheme.SelectedItem != null ? cmbTheme.SelectedItem.ToString() : "Cyan";
             cfg.SpectralVariance = chkSpectral.Checked;
+            cfg.EnableNebula = chkNebula.Checked;
+            cfg.EnableCosmicDust = chkCosmicDust.Checked;
             cfg.ShowTelemetryFrame = chkTelemetryFrame.Checked;
             cfg.EnableSensorJitter = chkJitter.Checked;
             cfg.MultiMonitor = chkMultiMonitor.Checked;
@@ -456,10 +520,13 @@ namespace StarshipStarfield
         private void OnSaveClicked(object sender, EventArgs e)
         {
             config.WarpFactor = tbWarp.Value / 10.0f;
+            config.PresetIndex = cmbPresets.SelectedIndex;
             config.StarCount = tbStarCount.Value;
             config.StreakLength = tbStreak.Value / 10.0f;
             config.ColorTheme = cmbTheme.SelectedItem != null ? cmbTheme.SelectedItem.ToString() : "Cyan";
             config.SpectralVariance = chkSpectral.Checked;
+            config.EnableNebula = chkNebula.Checked;
+            config.EnableCosmicDust = chkCosmicDust.Checked;
             config.ShowTelemetryFrame = chkTelemetryFrame.Checked;
             config.EnableSensorJitter = chkJitter.Checked;
             config.MultiMonitor = chkMultiMonitor.Checked;
@@ -474,10 +541,13 @@ namespace StarshipStarfield
             {
                 // Save current configuration first
                 config.WarpFactor = tbWarp.Value / 10.0f;
+                config.PresetIndex = cmbPresets.SelectedIndex;
                 config.StarCount = tbStarCount.Value;
                 config.StreakLength = tbStreak.Value / 10.0f;
                 config.ColorTheme = cmbTheme.SelectedItem != null ? cmbTheme.SelectedItem.ToString() : "Cyan";
                 config.SpectralVariance = chkSpectral.Checked;
+                config.EnableNebula = chkNebula.Checked;
+                config.EnableCosmicDust = chkCosmicDust.Checked;
                 config.ShowTelemetryFrame = chkTelemetryFrame.Checked;
                 config.EnableSensorJitter = chkJitter.Checked;
                 config.MultiMonitor = chkMultiMonitor.Checked;

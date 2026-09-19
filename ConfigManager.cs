@@ -10,12 +10,15 @@ namespace StarshipStarfield
         // Configuration fields with defaults
         public int StarCount { get; set; }
         public float WarpFactor { get; set; }        // Scales travel speed & telemetry
+        public int PresetIndex { get; set; }         // Selected preset index (0-7)
         public float StreakLength { get; set; }       // Length multiplier for star streaks
         public string ColorTheme { get; set; }        // Cyan, Amber, White, Green, Crimson
         public bool MultiMonitor { get; set; }        // Cover all displays
         public bool ShowTelemetryFrame { get; set; }  // Border / tactical frame around HUD
         public bool EnableSensorJitter { get; set; }  // Subtle micro-fluctuations in readout
         public bool SpectralVariance { get; set; }    // Realistic star spectral colors vs monochrome
+        public bool EnableNebula { get; set; }        // Procedural 3D cosmic gas clouds
+        public bool EnableCosmicDust { get; set; }    // Interstellar dust motes / micro-debris
         public double CustomKmPerSec { get; set; }    // Speed in km/s
         public double CustomLyPerHour { get; set; }   // Speed in ly/h
         public bool UseCustomSpeed { get; set; }      // Manual override toggle
@@ -25,15 +28,30 @@ namespace StarshipStarfield
             // Default configuration: Deep Warp Cruise
             StarCount = 1800;
             WarpFactor = 5.0f; // Mid-high warp
+            PresetIndex = 5;   // Deep Warp Cruise
             StreakLength = 1.2f;
             ColorTheme = "Cyan";
             MultiMonitor = true;
             ShowTelemetryFrame = true;
             EnableSensorJitter = true;
             SpectralVariance = true;
+            EnableNebula = true;
+            EnableCosmicDust = true;
             UseCustomSpeed = false;
             CustomKmPerSec = 2997924580.0; // ~10,000 c
             CustomLyPerHour = 1.1408;
+        }
+
+        public static int InferPresetIndex(float warpFactor)
+        {
+            if (warpFactor <= 0.6f) return 0;       // Sub-light Impulse
+            if (warpFactor <= 1.5f) return 1;       // Light Speed
+            if (warpFactor <= 2.8f) return 2;       // Warp 3 Cruise
+            if (warpFactor <= 4.0f) return 3;       // Warp 5 Standard
+            if (warpFactor <= 4.8f) return 4;       // Warp 8 Maximum
+            if (warpFactor <= 6.5f) return 5;       // Deep Warp Cruise
+            if (warpFactor <= 9.0f) return 6;       // Transwarp / Slipstream
+            return 7;                               // Custom
         }
 
         public void Load()
@@ -49,6 +67,16 @@ namespace StarshipStarfield
 
                     val = key.GetValue("WarpFactor");
                     if (val != null) WarpFactor = (float)Convert.ToDouble(val);
+
+                    val = key.GetValue("PresetIndex");
+                    if (val != null)
+                    {
+                        PresetIndex = Convert.ToInt32(val);
+                    }
+                    else
+                    {
+                        PresetIndex = InferPresetIndex(WarpFactor);
+                    }
 
                     val = key.GetValue("StreakLength");
                     if (val != null) StreakLength = (float)Convert.ToDouble(val);
@@ -67,6 +95,12 @@ namespace StarshipStarfield
 
                     val = key.GetValue("SpectralVariance");
                     if (val != null) SpectralVariance = Convert.ToBoolean(val);
+
+                    val = key.GetValue("EnableNebula");
+                    if (val != null) EnableNebula = Convert.ToBoolean(val);
+
+                    val = key.GetValue("EnableCosmicDust");
+                    if (val != null) EnableCosmicDust = Convert.ToBoolean(val);
 
                     val = key.GetValue("UseCustomSpeed");
                     if (val != null) UseCustomSpeed = Convert.ToBoolean(val);
@@ -94,12 +128,15 @@ namespace StarshipStarfield
 
                     key.SetValue("StarCount", StarCount);
                     key.SetValue("WarpFactor", WarpFactor);
+                    key.SetValue("PresetIndex", PresetIndex);
                     key.SetValue("StreakLength", StreakLength);
                     key.SetValue("ColorTheme", ColorTheme ?? "Cyan");
                     key.SetValue("MultiMonitor", MultiMonitor);
                     key.SetValue("ShowTelemetryFrame", ShowTelemetryFrame);
                     key.SetValue("EnableSensorJitter", EnableSensorJitter);
                     key.SetValue("SpectralVariance", SpectralVariance);
+                    key.SetValue("EnableNebula", EnableNebula);
+                    key.SetValue("EnableCosmicDust", EnableCosmicDust);
                     key.SetValue("UseCustomSpeed", UseCustomSpeed);
                     key.SetValue("CustomKmPerSec", CustomKmPerSec);
                     key.SetValue("CustomLyPerHour", CustomLyPerHour);

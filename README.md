@@ -26,6 +26,8 @@ A native Windows screensaver (`.scr`) that transforms your display into the forw
 ## ⚡ Key Features
 
 * **3D Perspective Starfield**: Deep space particles radiating forward with realistic depth-attenuated luminance.
+* **Procedural 3D Nebula Gas Clouds (NEW in v1.2)**: Volumetric interstellar gaseous clouds (emission, reflection, and planetary nebulae in celestial cyan, deep violet, hydrogen-alpha rose, and stellar amber) drifting through 3D space.
+* **Interstellar Cosmic Dust Particles (NEW in v1.2)**: Microscopic cosmic dust motes and micro-debris flying past the viewport with transverse velocity drift and relativistic micro-streaks.
 * **Spectral Stellar Classes**: Multi-spectral star generation across stellar classifications (Class O/B ice blue, Class A pure white, Class F warm ivory, Class G solar gold, Class K amber).
 * **Relativistic Warp Streaks**: Motion vectors stretch dynamically outwards based on forward velocity.
 * **Tactical Navigation HUD**:
@@ -34,7 +36,8 @@ A native Windows screensaver (`.scr`) that transforms your display into the forw
   * Micro-sensor telemetry jitter simulating active navigation sensors.
 * **Helm Controls (Configuration Modal)**:
   * Speed slider with synchronized live calculation of km/s and ly/h.
-  * Presets: Sub-light Impulse ($0.25c$), Light Speed ($1.0c$), Warp 3, Warp 5, Warp 8, Deep Warp ($10,000c$), and Slipstream ($50,000c$).
+  * Presets: Sub-light Impulse ($0.3c$), Light Speed ($1.0c$), Warp 3, Warp 5, Warp 8, Deep Warp ($10,000c$), and Slipstream ($50,000c$).
+  * Fully persistent preset selection without reverting to defaults.
   * Particle density (400 to 4,500 stars).
   * 5 HUD Themes: Tactical Cyan, LCARS Amber, Starlight White, Emerald Green, Crimson Alert.
   * Multi-monitor span support.
