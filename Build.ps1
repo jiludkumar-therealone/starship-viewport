@@ -26,6 +26,7 @@ $sources = @(
 $cmdArgs = @(
     "/target:winexe",
     "/optimize+",
+    "/unsafe+",
     "/platform:anycpu",
     "/win32manifest:app.manifest",
     "/win32icon:starship.ico",

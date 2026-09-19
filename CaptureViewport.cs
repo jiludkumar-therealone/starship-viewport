@@ -13,6 +13,12 @@ namespace StarshipStarfield
 
             ConfigManager cfg = new ConfigManager();
             cfg.Load();
+            // Hero screenshot settings: Deep Warp Cruise for dramatic warp strikes & nebulae
+            cfg.WarpFactor = 5.0f;
+            cfg.StreakLength = 1.4f;
+            cfg.EnableNebula = true;
+            cfg.EnableCosmicDust = true;
+            cfg.SpectralVariance = true;
 
             StarfieldEngine engine = new StarfieldEngine(
                 cfg.StarCount,
