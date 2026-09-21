@@ -59,7 +59,7 @@ Born out of pure nostalgia for the classic Windows 3D Starfield screensaver, **S
 > **Windows SmartScreen Notice**: Because this is a free, independent open-source project without an enterprise code-signing certificate, Microsoft Defender SmartScreen may display an *"Unrecognized app"* prompt on initial launch. Simply click **"More info"** → **"Run anyway"**, or unblock via PowerShell: `Unblock-File -Path .\StarshipStarfield.scr`. Alternatively, compile locally using `Build.ps1` (locally built binaries never trigger SmartScreen).
 
 ### Method 1: 1-Click Install (Pre-compiled Binary)
-1. Download `StarshipStarfield.scr` from the latest release.
+1. Download `StarshipStarfield.scr` from [GitHub Releases](https://github.com/jiludkumar-therealone/starship-viewport/releases).
 2. Right-click `StarshipStarfield.scr` and click **Install**.
 3. Windows Screen Saver Settings will open with the screensaver active and previewing in the mini monitor.
 

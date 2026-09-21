@@ -1,7 +1,9 @@
-# Build artifacts and temp files
+# Build artifacts and compiled binaries
+*.exe
+*.scr
 *.obj
 *.pdb
-CaptureSettingsPreview.exe
-CaptureViewport.exe
 
-# Keep binaries for direct download if desired, but ignore scratch files
+# Temporary frames and encoding caches
+_clip_frames/
+*.orig.cs
