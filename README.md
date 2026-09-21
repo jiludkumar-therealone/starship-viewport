@@ -11,15 +11,19 @@ Born out of pure nostalgia for the classic Windows 3D Starfield screensaver, **S
 
 ## 🌌 Viewport Preview
 
-![Starship Forward Viewport Preview](starship_preview.gif)
+![Starship Forward Viewport Preview](test_viewport_preview.png)
 
 ```text
 ┌─ NAV TELEMETRY // FWD SENSORS ────────────────┐
-│ VELOCITY    3,036,804,163 km/s                │
-│ RATE        1.156 ly/h                        │
+│ VELOCITY    3,036,072,273 km/s                │
+│ RATE        1.155 ly/h                        │
 │ SYS: ONLINE | WARP CRUISE ENGAGED             │
 └───────────────────────────────────────────────┘
 ```
+
+### 🎬 Animated Warp Flight
+
+![Starship Viewport Animation](starship_preview.gif)
 
 ---
 
