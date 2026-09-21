@@ -5,7 +5,7 @@
 [![Dependencies](https://img.shields.io/badge/dependencies-Zero%20External%20(Inbox%20.NET)-brightgreen)](https://github.com/jiludkumar-therealone/starship-viewport)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Born out of pure nostalgia for the classic Windows 3D Starfield screensaver, **Starship Forward Viewport** is a native Windows screensaver (`.scr`) that transforms your display into the forward viewing screen of an interstellar starship accelerating through deep space. Features true 3D perspective projection, relativistic warp streaks, and an authentic military-grade navigation telemetry HUD in the lower-right sector displaying velocity in **km/s** and interstellar rate in **lightyears/hour**.
+Born out of pure nostalgia for the classic Windows 3D Starfield screensaver, **Starship Forward Viewport** is a Windows screensaver (`.scr`) that transforms your display into the forward viewing screen of an interstellar starship accelerating through deep space. Features true 3D perspective projection, relativistic warp streaks, and an authentic military-grade navigation telemetry HUD in the lower-right sector displaying velocity in **km/s** and interstellar rate in **lightyears/hour**.
 
 ---
 
@@ -81,7 +81,7 @@ StarshipStarfield.scr /p <HWND>  :: Render in child preview window
 
 ## 🔨 Building from Source
 
-No Visual Studio or external .NET SDK installation is required—uses the native Windows C# compiler (`csc.exe`):
+No Visual Studio or external .NET SDK installation is required—uses the built-in Windows .NET Framework compiler (`csc.exe`):
 
 ```powershell
 git clone https://github.com/jiludkumar-therealone/starship-viewport.git
