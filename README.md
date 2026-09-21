@@ -2,7 +2,7 @@
 
 [![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0078D4?logo=windows)](https://github.com/jiludkumar-therealone/starship-viewport)
 [![Language](https://img.shields.io/badge/language-C%23-239120?logo=csharp)](https://github.com/jiludkumar-therealone/starship-viewport)
-[![Framework](https://img.shields.io/badge/dependency-None%20(Native%20Win32)-brightgreen)](https://github.com/jiludkumar-therealone/starship-viewport)
+[![Dependencies](https://img.shields.io/badge/dependencies-Zero%20External%20(Inbox%20.NET)-brightgreen)](https://github.com/jiludkumar-therealone/starship-viewport)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Born out of pure nostalgia for the classic Windows 3D Starfield screensaver, **Starship Forward Viewport** is a native Windows screensaver (`.scr`) that transforms your display into the forward viewing screen of an interstellar starship accelerating through deep space. Features true 3D perspective projection, relativistic warp streaks, and an authentic military-grade navigation telemetry HUD in the lower-right sector displaying velocity in **km/s** and interstellar rate in **lightyears/hour**.
@@ -43,7 +43,7 @@ Born out of pure nostalgia for the classic Windows 3D Starfield screensaver, **S
   * Particle density (400 to 4,500 stars).
   * 5 HUD Themes: Tactical Cyan, LCARS Amber, Starlight White, Emerald Green, Crimson Alert.
   * Multi-monitor span support.
-* **Zero Runtime Dependencies**: Compiles to a lightweight ~30 KB binary using built-in Windows Framework components. Runs immediately on any stock Windows 10/11 machine without needing .NET runtimes or external DLLs installed.
+* **Zero External Dependencies**: Compiles to a lightweight ~30 KB binary utilizing built-in Windows inbox components (.NET Framework / WinForms). Runs immediately on any stock Windows 10/11 installation out of the box without requiring external runtimes, C++ redistributables, or secondary installers.
 
 ---
 
