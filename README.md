@@ -5,17 +5,17 @@
 [![Framework](https://img.shields.io/badge/dependency-None%20(Native%20Win32)-brightgreen)](https://github.com/jiludkumar-therealone/starship-viewport)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-A native Windows screensaver (`.scr`) that transforms your display into the forward viewing screen of an interstellar starship accelerating through deep space. Features true 3D perspective projection, relativistic warp streaks, and an authentic military-grade navigation telemetry HUD in the lower-right sector displaying velocity in **km/s** and interstellar rate in **lightyears/hour**.
+Born out of pure nostalgia for the classic Windows 3D Starfield screensaver, **Starship Forward Viewport** is a native Windows screensaver (`.scr`) that transforms your display into the forward viewing screen of an interstellar starship accelerating through deep space. Features true 3D perspective projection, relativistic warp streaks, and an authentic military-grade navigation telemetry HUD in the lower-right sector displaying velocity in **km/s** and interstellar rate in **lightyears/hour**.
 
 ---
 
 ## 🌌 Viewport Preview
 
-![Starship Forward Viewport Preview](test_viewport_preview.png)
+![Starship Forward Viewport Preview](starship_preview.gif)
 
 ```text
 ┌─ NAV TELEMETRY // FWD SENSORS ────────────────┐
-│ VELOCITY    3,037,087,927 km/s                │
+│ VELOCITY    3,036,804,163 km/s                │
 │ RATE        1.156 ly/h                        │
 │ SYS: ONLINE | WARP CRUISE ENGAGED             │
 └───────────────────────────────────────────────┘
@@ -51,8 +51,11 @@ A native Windows screensaver (`.scr`) that transforms your display into the forw
 
 ## 📥 Installation
 
+> [!TIP]
+> **Windows SmartScreen Notice**: Because this is a free, independent open-source project without an enterprise code-signing certificate, Microsoft Defender SmartScreen may display an *"Unrecognized app"* prompt on initial launch. Simply click **"More info"** → **"Run anyway"**, or unblock via PowerShell: `Unblock-File -Path .\StarshipStarfield.scr`. Alternatively, compile locally using `Build.ps1` (locally built binaries never trigger SmartScreen).
+
 ### Method 1: 1-Click Install (Pre-compiled Binary)
-1. Download or locate `StarshipStarfield.scr`.
+1. Download `StarshipStarfield.scr` from the latest release.
 2. Right-click `StarshipStarfield.scr` and click **Install**.
 3. Windows Screen Saver Settings will open with the screensaver active and previewing in the mini monitor.
 
